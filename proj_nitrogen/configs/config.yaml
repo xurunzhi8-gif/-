@@ -1,0 +1,73 @@
+# ------------------------
+# 数据与路径
+# ------------------------
+data:
+  root_dir: D:/2025实验数据/原阳
+  metadata_full: D:/2025实验数据/原阳/metadata_full.csv
+  image_size: 224
+  num_workers: 8
+
+# ------------------------
+# 训练参数
+# ------------------------
+train:
+  batch_size: 32
+  epochs: 120
+  lr: 0.0003
+  weight_decay: 0.00005
+  optimizer: adamw
+  scheduler: cosine
+  seed: 42
+  use_amp: true
+  early_stop_patience: 15
+
+# ------------------------
+# 模型结构开关（消融用）
+# ------------------------
+model:
+  backbone: mobilenetv4_small   # options: mobilenetv3_small, mobilenetv4_small, efficientnet_b0, mobilevit_xs
+  use_fpn: true
+  use_film: true
+  use_task_decouple: true
+  use_spatial_head: true
+
+# ------------------------
+# 损失函数
+# ------------------------
+loss:
+  use_uncertainty_weighting: true
+  use_consistency_loss: true
+  lambda_consistency: 0.5
+  base_loss: smooth_l1
+
+# ------------------------
+# 评估
+# ------------------------
+eval:
+  metrics: [r2, rmse, mae]
+  save_preds: true
+
+# ------------------------
+# Grad-CAM
+# ------------------------
+gradcam:
+  target_layers: ["C5"]
+  save_overlay: true
+
+# ------------------------
+# 输出目录
+# ------------------------
+output:
+  root: outputs
+  save_models: true
+  save_logs: true
+  save_figs: true
+  save_tables: true
+
+# ------------------------
+# 任务与实验
+# ------------------------
+targets: ["SNC_pct", "shootN_gm2", "leafN_gm2"]
+experiments:
+  ablations: ["baseline", "no_fpn", "no_film", "no_task_decouple", "no_uncertainty", "no_consistency"]
+  backbones: ["mobilenetv3_small", "mobilenetv4_small", "efficientnet_b0", "mobilevit_xs"]
